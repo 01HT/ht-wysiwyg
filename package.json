@@ -1,0 +1,16 @@
+{
+  "name": "ht-wysiwyg",
+  "version": "1.0.0",
+  "main": "ht-wysiwyg.js",
+  "repository": "https://github.com/maksimyurkov/ht-wysiwyg",
+  "author": "maksimyurkov <yurkov.maksim.sergeevich@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@polymer/lit-element": "@next",
+    "@polymer/paper-dialog": "@next",
+    "@polymer/paper-dialog-scrollable": "@next",
+    "@polymer/paper-button": "@next",
+    "ht-storage": "https://github.com/maksimyurkov/ht-storage",
+    "quill": "^1.3.5"
+  }
+}
