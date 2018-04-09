@@ -94,7 +94,7 @@ class HTWysiwyg extends LitElement {
   }
 
   setDefaultData() {
-    this.setData({});
+    this.setData("{}");
   }
 
   insertToEditor(url) {
