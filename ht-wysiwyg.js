@@ -90,7 +90,14 @@ class HTWysiwyg extends LitElement {
   }
 
   setData(description) {
-    this.quill.setContents(JSON.parse(description));
+    if (this.quillReady) {
+      this.quill.setContents(JSON.parse(description));
+    } else {
+      let timeoutID = setTimeout(100, _ => {
+        this.setData(description).bind(this);
+        clearTimeout(timeoutID);
+      });
+    }
   }
 
   setDefaultData() {
