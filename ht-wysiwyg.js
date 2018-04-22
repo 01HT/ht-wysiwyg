@@ -38,6 +38,7 @@ class HTWysiwyg extends LitElement {
       <iframe id="iframe" src="/node_modules/ht-wysiwyg/iframe-with-quill.html" frameborder="0"></iframe>
       <paper-dialog>
         <h2>Выберите файлы</h2>
+        <p>.jpeg | .png | .gif | .tiff | .svg | .webp < 2 MB</p>
         <paper-dialog-scrollable>
             <ht-storage></ht-storage>
         </paper-dialog-scrollable>
