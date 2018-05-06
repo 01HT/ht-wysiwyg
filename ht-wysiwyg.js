@@ -7,7 +7,7 @@ import "@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js";
 import "ht-storage/ht-storage.js";
 
 class HTWysiwyg extends LitElement {
-  render() {
+  _render() {
     return html`
       <style>
         :host {
