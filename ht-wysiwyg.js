@@ -6,6 +6,9 @@ import "@polymer/paper-dialog/paper-dialog.js";
 import "@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js";
 import "ht-storage/ht-storage.js";
 
+// Fix for adding this file when build
+import { iframeContent } from "./iframe-content.js";
+
 class HTWysiwyg extends LitElement {
   _render() {
     return html`
@@ -35,7 +38,7 @@ class HTWysiwyg extends LitElement {
           color: var(--accent-color);
         }
       </style>
-      <iframe id="iframe" src="/node_modules/ht-wysiwyg/iframe-with-quill.html" frameborder="0"></iframe>
+      <iframe id="iframe" frameborder="0"></iframe>
       <paper-dialog>
         <h2>Выберите файлы</h2>
         <p>.jpeg | .png | .gif | .tiff | .svg | .webp < 2 MB</p>
@@ -65,6 +68,7 @@ class HTWysiwyg extends LitElement {
   ready() {
     super.ready();
     let iframe = this.shadowRoot.getElementById("iframe");
+    iframe.contentDocument.write(iframeContent);
     iframe.contentWindow.addEventListener("quill-ready", e => {
       e.preventDefault();
       this.dispatchEvent(

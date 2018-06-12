@@ -1,3 +1,4 @@
+export const iframeContent = `
 <!DOCTYPE html>
 <html lang="en">
 
@@ -74,5 +75,5 @@
         });
     </script>
 </body>
-
 </html>
+`;
