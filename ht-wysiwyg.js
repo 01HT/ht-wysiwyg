@@ -24,24 +24,25 @@ class HTWysiwyg extends LitElement {
           height: 500px;
         }
 
-        paper-dialog {
-          width: 100%;
-          max-width: 800px;
-        }
-
-        ht-storage {
-          border:1px solid var(--divider-color);
-        }
-
         paper-button {
           font-weight: 500;
           color: var(--accent-color);
+        }
+
+        paper-dialog {
+          width: 95%;
+          max-width: 800px;
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        #test {
+          height:300px;
         }
       </style>
       <iframe id="iframe" frameborder="0"></iframe>
       <paper-dialog>
         <h2>Выберите файлы</h2>
-        <p>.jpeg | .png | .gif | .tiff | .svg | .webp < 2 MB</p>
         <paper-dialog-scrollable>
             <ht-storage></ht-storage>
         </paper-dialog-scrollable>
@@ -63,14 +64,16 @@ class HTWysiwyg extends LitElement {
     super();
     this.quillReady = false;
     this.quill = {};
+    this.currentInsertMode;
   }
 
   ready() {
     super.ready();
     let iframe = this.shadowRoot.getElementById("iframe");
+    iframe.contentWindow.cloudinaryURL = window.cloudinaryURL;
     iframe.contentDocument.write(iframeContent);
     iframe.contentWindow.addEventListener("quill-ready", e => {
-      e.preventDefault();
+      e.stopPropagation();
       this.dispatchEvent(
         new CustomEvent("ht-wysiwyg-ready", {
           bubbles: false
@@ -80,7 +83,8 @@ class HTWysiwyg extends LitElement {
       this.quill = iframe.contentWindow.quill;
     });
     iframe.contentWindow.addEventListener("show-modal", e => {
-      e.preventDefault();
+      e.stopPropagation();
+      this.currentInsertMode = e.detail.mode;
       this.shadowRoot.querySelector("paper-dialog").open();
       this.storage.updateList();
     });
@@ -91,6 +95,7 @@ class HTWysiwyg extends LitElement {
   }
 
   getData() {
+    // Get data in HTML format => this.quill.root.innerHTML
     return JSON.stringify(this.quill.getContents());
   }
 
@@ -109,17 +114,36 @@ class HTWysiwyg extends LitElement {
     this.setData("{}");
   }
 
-  insertToEditor(url) {
-    const range = this.quill.getSelection();
-    this.quill.insertEmbed(range.index, "image", `${url}`);
+  insertToEditor(item) {
+    let Quill = this.shadowRoot.getElementById("iframe").contentWindow.Quill;
+    let resourceType = item.resource_type;
+    let format = item.format;
+    let currentInsertMode = this.currentInsertMode;
+
+    if (currentInsertMode === "image" && resourceType !== "image") return;
+    if (currentInsertMode === "gif" && format !== "gif") return;
+    if (currentInsertMode === "video" && resourceType !== "video") return;
+
+    const range = this.quill.getSelection(true);
+
+    this.quill.insertText(range.index, "\n", Quill.sources.USER);
+
+    if (this.currentInsertMode === currentInsertMode)
+      this.quill.insertEmbed(
+        range.index + 1,
+        `ht-wysiwyg-${currentInsertMode}`,
+        item,
+        Quill.sources.USER
+      );
+
+    this.quill.setSelection(range.index + 2, Quill.sources.SILENT);
   }
 
   _insertImages() {
-    let arrayOfSrc = [];
-    let srcs = this.storage.getSelectedImageSources();
-    if (srcs.length === 0) return;
-    srcs.forEach(src => {
-      this.insertToEditor(src);
+    let items = this.storage.getSelectedItems();
+    if (items.length === 0) return;
+    items.forEach(item => {
+      this.insertToEditor(item);
     });
   }
 }
