@@ -1,7 +1,9 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
+
 class HTWysiwygVideo extends LitElement {
-  _render({ data }) {
+  render() {
+    const { data } = this;
     let poster = `${window.cloudinaryURL}/video/upload/v${data.version}/${
       data.public_id
     }.jpg`;
@@ -20,9 +22,9 @@ class HTWysiwygVideo extends LitElement {
         }
       </style>
       <div id="container">
-        <video width="100%" height="auto" controls="controls" poster="${poster}">
-            <source type="video/mp4" src="${mp4}">
-            <source type="video/webm" src="${webm}">
+        <video width="100%" height="auto" controls="controls" poster=${poster}>
+            <source type="video/mp4" src=${mp4}>
+            <source type="video/webm" src=${webm}>
         </video>
       </div>
 `;
@@ -34,7 +36,7 @@ class HTWysiwygVideo extends LitElement {
 
   static get properties() {
     return {
-      data: Object
+      data: { type: Object }
     };
   }
 }

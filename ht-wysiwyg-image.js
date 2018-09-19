@@ -1,7 +1,9 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
+
 class HTWysiwygImage extends LitElement {
-  _render({ data }) {
+  render() {
+    const { data } = this;
     let placeholder = `${
       window.cloudinaryURL
     }/image/upload/c_scale,f_auto,w_64/v${data.version}/${data.public_id}.${
@@ -17,9 +19,9 @@ class HTWysiwygImage extends LitElement {
     }
     let padding = "100%";
     if (data.width < data.height) {
-      padding = "" + (2 - data.height / data.width) * 100;
+      padding = "" + data.width / data.height * 100;
     } else {
-      padding = "" + (2 - data.width / data.height) * 100;
+      padding = "" + data.height / data.width * 100;
     }
     return html`
       <style>
@@ -74,12 +76,11 @@ class HTWysiwygImage extends LitElement {
 
   static get properties() {
     return {
-      data: Object
+      data: { type: Object }
     };
   }
 
-  ready() {
-    super.ready();
+  firstUpdated() {
     this.shadowRoot.querySelector("picture").removeAttribute("loading", "");
     this.shadowRoot.querySelectorAll("img").forEach(img => {
       img.addEventListener("load", e => {

@@ -55,3 +55,21 @@ HTWysiwygVideo.blotName = "ht-wysiwyg-video";
 HTWysiwygVideo.tagName = "ht-wysiwyg-video";
 
 Quill.register(HTWysiwygVideo);
+
+// ht-wysiwyg-youtube
+class HTWysiwygYoutube extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.data = value;
+    return node;
+  }
+
+  static value(node) {
+    return node.data;
+  }
+}
+
+HTWysiwygYoutube.blotName = "ht-wysiwyg-youtube";
+HTWysiwygYoutube.tagName = "ht-wysiwyg-youtube";
+
+Quill.register(HTWysiwygYoutube);

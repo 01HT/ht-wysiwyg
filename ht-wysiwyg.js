@@ -1,6 +1,7 @@
 "use strict";
 import { LitElement, html } from "@polymer/lit-element";
 import "@polymer/paper-button";
+import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-styles/default-theme.js";
 import "@polymer/paper-dialog/paper-dialog.js";
 import "@polymer/paper-dialog-scrollable/paper-dialog-scrollable.js";
@@ -10,7 +11,7 @@ import "@01ht/ht-storage";
 import { iframeContent } from "./iframe-content.js";
 
 class HTWysiwyg extends LitElement {
-  _render() {
+  render() {
     return html`
       <style>
         :host {
@@ -41,14 +42,28 @@ class HTWysiwyg extends LitElement {
         }
       </style>
       <iframe id="iframe" frameborder="0"></iframe>
-      <paper-dialog>
+      <paper-dialog id="youtube-dialog">
+        <paper-dialog-scrollable>
+          <h2>Введите ID видео</h2>
+          <paper-input id="youtube" label="YouTube videoID" always-float-label placeholder="videoID">
+            <div slot="prefix">https://www.youtube.com/watch?v=</div>
+          </paper-input>
+        </paper-dialog-scrollable>
+        <div class="buttons">
+          <paper-button id="close" dialog-dismiss>Закрыть</paper-button>
+          <paper-button id="select" dialog-confirm autofocus @click=${e => {
+            this._insertYouTubeVideo();
+          }}>Выбрать</paper-button>
+        </div>
+      </paper-dialog>
+      <paper-dialog id="ht-storage-dialog">
         <h2>Выберите файлы</h2>
         <paper-dialog-scrollable>
             <ht-storage></ht-storage>
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="close" dialog-dismiss>Закрыть</paper-button>
-          <paper-button id="select" dialog-confirm autofocus on-click="${e => {
+          <paper-button id="select" dialog-confirm autofocus @click=${e => {
             this._insertImages();
           }}">Выбрать</paper-button>
         </div>
@@ -67,8 +82,7 @@ class HTWysiwyg extends LitElement {
     this.currentInsertMode;
   }
 
-  ready() {
-    super.ready();
+  firstUpdated() {
     let iframe = this.shadowRoot.getElementById("iframe");
     iframe.contentWindow.cloudinaryURL = window.cloudinaryURL;
     iframe.contentDocument.write(iframeContent);
@@ -79,14 +93,20 @@ class HTWysiwyg extends LitElement {
           bubbles: false
         })
       );
-      this.quillReady = true;
+
       this.quill = iframe.contentWindow.quill;
+      this.quillReady = true;
     });
     iframe.contentWindow.addEventListener("show-modal", e => {
       e.stopPropagation();
       this.currentInsertMode = e.detail.mode;
-      this.shadowRoot.querySelector("paper-dialog").open();
-      this.storage.updateList();
+      if (this.currentInsertMode === "youtube") {
+        this.shadowRoot.querySelector("#youtube").value = "";
+        this.shadowRoot.querySelector("#youtube-dialog").open();
+      } else {
+        this.shadowRoot.querySelector("#ht-storage-dialog").open();
+        this.storage.updateList();
+      }
     });
   }
 
@@ -103,10 +123,10 @@ class HTWysiwyg extends LitElement {
     if (this.quillReady) {
       this.quill.setContents(JSON.parse(description));
     } else {
-      let timeoutID = setTimeout(100, _ => {
-        this.setData(description).bind(this);
+      let timeoutID = setTimeout(_ => {
+        this.setData(description);
         clearTimeout(timeoutID);
-      });
+      }, 100);
     }
   }
 
@@ -137,6 +157,11 @@ class HTWysiwyg extends LitElement {
       );
 
     this.quill.setSelection(range.index + 2, Quill.sources.SILENT);
+  }
+
+  _insertYouTubeVideo() {
+    let videoID = this.shadowRoot.querySelector("#youtube").value;
+    this.insertToEditor({ videoID: videoID });
   }
 
   _insertImages() {

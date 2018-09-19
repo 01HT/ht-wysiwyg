@@ -13,13 +13,16 @@ import "@01ht/ht-wysiwyg/ht-quill-components.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-image.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-gif.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-video.js";
+import "@01ht/ht-wysiwyg/ht-wysiwyg-youtube.js";
 
 hljs.configure({
   languages: ["javascript", "ruby", "python", "sql", "html", "css"]
 });
 
 class HTWysiwygViewer extends LitElement {
-  _render() {
+  render() {
+    const { data, quillReady } = this;
+    if (quillReady) this.quill.setContents(JSON.parse(data));
     return html`
     ${stylesQuillSnow}
     ${stylesHighlightjs}
@@ -51,8 +54,9 @@ class HTWysiwygViewer extends LitElement {
 
   static get properties() {
     return {
-      description: Object,
-      quillReady: Boolean
+      data: { type: String },
+      description: { type: Object },
+      quillReady: { type: Boolean }
     };
   }
 
@@ -75,7 +79,7 @@ class HTWysiwygViewer extends LitElement {
     this.quill.setContents(this.description);
   }
 
-  _firstRendered() {
+  firstUpdated() {
     if (!window.Quill) {
       let script = document.createElement("script");
       script.src = "/node_modules/quill/dist/quill.min.js";
@@ -86,11 +90,6 @@ class HTWysiwygViewer extends LitElement {
     } else {
       this._initQuill();
     }
-  }
-
-  set data(data) {
-    this.description = JSON.parse(data);
-    if (this.quillReady) this.quill.setContents(this.description);
   }
 }
 
