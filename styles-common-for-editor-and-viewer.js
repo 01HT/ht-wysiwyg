@@ -1,19 +1,10 @@
 import { html } from "@polymer/lit-element";
 
 export const stylesCommonForEditorAndViewer = html`
+
 <style>
 .ql-editor {
     white-space: initial;
-}
-
-.ql-snow .ql-editor a {
-    text-decoration: none;
-    color:#4285f4;
-}
-
-.ql-snow .ql-editor a:hover {
-    text-decoration: underline;
-    color:#4285f4;
 }
 
 .ql-editor .ql-video {
@@ -22,13 +13,24 @@ export const stylesCommonForEditorAndViewer = html`
     margin: 24px 0;
 }
 
-.ql-snow .ql-editor pre {
+pre {
     border-radius:0;
-    margin: 24px 0;
+    padding: 16px;
     font-size:14px;
+    background-color: #23241f;
+    color: #f8f8f2;
+    word-break: keep-all;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    display:block; 
+    white-space: pre-wrap;  
+    white-space: -moz-pre-wrap; 
+    white-space: -pre-wrap; 
+    white-space: -o-pre-wrap; 
+    word-wrap: break-word; 
 }
 
-.ql-snow .ql-editor blockquote {
+blockquote {
     border-left: 3px solid rgba(0,0,0,.84);
     padding:0;
     padding-left: 20px;
@@ -36,41 +38,46 @@ export const stylesCommonForEditorAndViewer = html`
     font-style: italic;
     line-height: 1.58;
     letter-spacing: -.003em;
-    margin: 24px 0;
 }
 
-.ql-snow .ql-editor h2, .ql-snow .ql-editor h3, .ql-snow .ql-editor h4 {
-    margin: 16px 0;
+h2 {
+    font-family: Roboto, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 2.125rem;
+    line-height: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.00735em;
+    text-decoration: inherit;
+    text-transform: inherit;
 }
 
-.ql-snow .ql-editor h2 {
-    font-size: 36px;
+h3 {
+    font-family: Roboto, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-decoration: inherit;
+    text-transform: inherit;
 }
 
-.ql-snow .ql-editor h3 {
-    font-size: 28px;
-}
+h4 {
+    font-family: Roboto, sans-serif;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1.25rem;
+    line-height: 2rem;
+    font-weight: 500;
+    letter-spacing: 0.0125em;
+    text-decoration: inherit;
+    text-transform: inherit;
+    }
 
-.ql-snow .ql-editor h4 {
-    font-size: 20px
+ht-wysiwyg-image, ht-wysiwyg-gif, ht-wysiwyg-video, pre, blockquote  {
+    margin: 32px 0;
 }
-
-.ql-snow .ql-editor {
-    color: #414549;
-}
-
-.ql-snow .ql-editor p, .ql-snow .ql-editor blockquote, .ql-editor ol, .ql-editor ul {
-    font-size: 16px;
-    line-height: 30px;
-    color: #424242;
-    margin: 24px 0;
-}
-
-.ql-snow .ql-editor ul, .ql-snow .ql-editor ol {
-    padding-left:24px;
-}
-
-ht-wysiwyg-image, ht-wysiwyg-gif, ht-wysiwyg-video {
-    margin: 24px 0;
-}
-</style>`;
+</style>
+`;

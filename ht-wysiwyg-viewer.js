@@ -24,9 +24,10 @@ class HTWysiwygViewer extends LitElement {
     const { data, quillReady } = this;
     if (quillReady) this.quill.setContents(JSON.parse(data));
     return html`
-    ${stylesQuillSnow}
+    <!-- ${stylesQuillSnow} -->
     ${stylesHighlightjs}
     ${stylesCommonForEditorAndViewer}
+    ${SharedStyles}
     <style>
       :host {
         display: block;
