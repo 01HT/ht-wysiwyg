@@ -42,6 +42,10 @@ class HTWysiwygViewer extends LitElement {
       .ql-container.ql-snow {
           border: none;
       }
+
+      .ql-clipboard {
+        display:none;
+      }
     </style>
     <div id="container">
         <div id="quill"></div>
