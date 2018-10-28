@@ -80,24 +80,26 @@ class HTWysiwyg extends LitElement {
     this.quillReady = false;
     this.quill = {};
     this.currentInsertMode;
+    this.description = `{"ops":[{"insert":"\\n"}]}`;
   }
 
   firstUpdated() {
     let iframe = this.shadowRoot.getElementById("iframe");
-    iframe.contentWindow.cloudinaryURL = window.cloudinaryURL;
+    let iframeWindow = iframe.contentWindow;
     iframe.contentDocument.write(iframeContent);
-    iframe.contentWindow.addEventListener("quill-ready", e => {
+    iframeWindow.cloudinaryURL = window.cloudinaryURL;
+    iframeWindow.addEventListener("quill-ready", e => {
       e.stopPropagation();
+      this.quill = iframeWindow.quill;
+      this.quillReady = true;
+      this.setData(this.description);
       this.dispatchEvent(
         new CustomEvent("ht-wysiwyg-ready", {
           bubbles: false
         })
       );
-
-      this.quill = iframe.contentWindow.quill;
-      this.quillReady = true;
     });
-    iframe.contentWindow.addEventListener("show-modal", e => {
+    iframeWindow.addEventListener("show-modal", e => {
       e.stopPropagation();
       this.currentInsertMode = e.detail.mode;
       if (this.currentInsertMode === "youtube") {
@@ -120,18 +122,16 @@ class HTWysiwyg extends LitElement {
   }
 
   setData(description) {
+    this.description = description;
     if (this.quillReady) {
-      this.quill.setContents(JSON.parse(description));
-    } else {
-      let timeoutID = setTimeout(_ => {
-        this.setData(description);
-        clearTimeout(timeoutID);
-      }, 100);
+      if (this.getData() !== this.description) {
+        this.quill.setContents(JSON.parse(this.description));
+      }
     }
   }
 
   setDefaultData() {
-    this.setData("{}");
+    this.setData(`{"ops":[{"insert":"\\n"}]}`);
   }
 
   insertToEditor(item) {

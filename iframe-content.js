@@ -7,10 +7,10 @@ export const iframeContent = `
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Iframe with Quill</title>
+    <!--<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>-->
     <script src="/node_modules/@01ht/ht-wysiwyg/highlight.pack.js"></script>
-    <script src="/node_modules/quill/dist/quill.min.js"></script>
-    <script src="/node_modules/@01ht/ht-wysiwyg/ht-quill-components.js"></script>
-
+    <script src="/node_modules/quill/dist/quill.min.js"></script> 
+    <script src="/node_modules/@01ht/ht-wysiwyg/iframe-imports-amd.js"></script> 
     <!-- (from ./styles-quill-snow.js) Quill Snow styles -->
     <style>
         .ql-container {
@@ -1436,19 +1436,6 @@ li {
 
 <body>
     <script>
-        // Fix for iframe because default module add not working in frames
-        function addModule(url) {
-            let script = document.createElement("script");
-            script.setAttribute("type", "module");
-            script.setAttribute("src", url);
-            document.head.appendChild(script);
-        }
-
-        addModule("/node_modules/@01ht/ht-wysiwyg/ht-wysiwyg-image.js");
-        addModule("/node_modules/@01ht/ht-wysiwyg/ht-wysiwyg-gif.js");
-        addModule("/node_modules/@01ht/ht-wysiwyg/ht-wysiwyg-video.js");
-        addModule("/node_modules/@01ht/ht-wysiwyg/ht-wysiwyg-youtube.js");
-
         const icons = Quill.import('ui/icons');
         icons.header[3] = \`<svg viewBox="0 0 18 18">
   <path class="ql-fill" d="M16.65186,12.30664a2.6742,2.6742,0,0,1-2.915,2.68457,3.96592,3.96592,0,0,1-2.25537-.6709.56007.56007,0,0,1-.13232-.83594L11.64648,13c.209-.34082.48389-.36328.82471-.1543a2.32654,2.32654,0,0,0,1.12256.33008c.71484,0,1.12207-.35156,1.12207-.78125,0-.61523-.61621-.86816-1.46338-.86816H13.2085a.65159.65159,0,0,1-.68213-.41895l-.05518-.10937a.67114.67114,0,0,1,.14307-.78125l.71533-.86914a8.55289,8.55289,0,0,1,.68213-.7373V8.58887a3.93913,3.93913,0,0,1-.748.05469H11.9873a.54085.54085,0,0,1-.605-.60547V7.59863a.54085.54085,0,0,1,.605-.60547h3.75146a.53773.53773,0,0,1,.60547.59375v.17676a1.03723,1.03723,0,0,1-.27539.748L14.74854,10.0293A2.31132,2.31132,0,0,1,16.65186,12.30664ZM9,3A.99974.99974,0,0,0,8,4V8H3V4A1,1,0,0,0,1,4V14a1,1,0,0,0,2,0V10H8v4a1,1,0,0,0,2,0V4A.99974.99974,0,0,0,9,3Z"/>
@@ -1477,55 +1464,141 @@ icons.video = \`<svg viewBox="0 0 24 24">
 
     <div id="quill"></div>
     <script>
-        hljs.configure({
-        languages: ["javascript", "ruby", "python", "sql", "html", "css"]
-        });
+      hljs.configure({
+  languages: ["javascript", "ruby", "python", "sql", "html", "css"]
+});
 
-        var quill = new Quill(document.querySelector("#quill"), {
-            modules: {
-                syntax: true,
-                toolbar: {
-                    container: [
-                        ["bold", "italic"],
-                        [{ 'header': 2 }, { 'header': 3 }, { 'header': 4 }],
-                        ["link", "image", "gif", "video", "youtube"],
-                        ['blockquote', 'code-block'],
-                        [
-                            {
-                                list: "ordered"
-                            },
-                            {
-                                list: "bullet"
-                            }
-                        ],
-                        ["clean"]
-                    ],
-                    handlers: {
-                        'image': () => { showModal("image") },
-                        'gif': () => { showModal("gif") },
-                        'video': () => { showModal("video") },
-                        'youtube': () => { showModal("youtube") }
-                        
-                    }
-                }
-            },
-            theme: "snow"
-        });
+// From ht-quill-components.js
+let Inline = Quill.import("blots/inline");
+let Block = Quill.import("blots/block");
+let BlockEmbed = Quill.import("blots/block/embed");
 
-        window.dispatchEvent(
-            new CustomEvent("quill-ready", {
-                bubbles: false
-            })
-        );
+// ht-wysiwyg-image
+class HTWysiwygImage extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.data = value;
+    return node;
+  }
 
-        function showModal(mode) {
-            window.dispatchEvent(
-                new CustomEvent("show-modal", {
-                    bubbles: false,
-                    detail: {mode: mode}
-                })
-            );
+  static value(node) {
+    return node.data;
+  }
+}
+
+HTWysiwygImage.blotName = "ht-wysiwyg-image";
+HTWysiwygImage.tagName = "ht-wysiwyg-image";
+
+Quill.register(HTWysiwygImage);
+
+// ht-wysiwyg-gif
+class HTWysiwygGif extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.data = value;
+    return node;
+  }
+
+  static value(node) {
+    return node.data;
+  }
+}
+
+HTWysiwygGif.blotName = "ht-wysiwyg-gif";
+HTWysiwygGif.tagName = "ht-wysiwyg-gif";
+
+Quill.register(HTWysiwygGif);
+
+// ht-wysiwyg-video
+class HTWysiwygVideo extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.data = value;
+    return node;
+  }
+
+  static value(node) {
+    return node.data;
+  }
+}
+
+HTWysiwygVideo.blotName = "ht-wysiwyg-video";
+HTWysiwygVideo.tagName = "ht-wysiwyg-video";
+
+Quill.register(HTWysiwygVideo);
+
+// ht-wysiwyg-youtube
+class HTWysiwygYoutube extends BlockEmbed {
+  static create(value) {
+    let node = super.create();
+    node.data = value;
+    return node;
+  }
+
+  static value(node) {
+    return node.data;
+  }
+}
+
+HTWysiwygYoutube.blotName = "ht-wysiwyg-youtube";
+HTWysiwygYoutube.tagName = "ht-wysiwyg-youtube";
+
+Quill.register(HTWysiwygYoutube);
+
+function showModal(mode) {
+  window.dispatchEvent(
+    new CustomEvent("show-modal", {
+      bubbles: false,
+      detail: { mode: mode }
+    })
+  );
+}
+
+window.quill = new Quill(document.querySelector("#quill"), {
+  modules: {
+    syntax: true,
+    toolbar: {
+      container: [
+        ["bold", "italic"],
+        [{ header: 2 }, { header: 3 }, { header: 4 }],
+        ["link", "image", "gif", "video", "youtube"],
+        ["blockquote", "code-block"],
+        [
+          {
+            list: "ordered"
+          },
+          {
+            list: "bullet"
+          }
+        ],
+        ["clean"]
+      ],
+      handlers: {
+        image: () => {
+          showModal("image");
+        },
+        gif: () => {
+          showModal("gif");
+        },
+        video: () => {
+          showModal("video");
+        },
+        youtube: () => {
+          showModal("youtube");
         }
+      }
+    }
+  },
+  theme: "snow"
+});
+
+window.dispatchEvent(
+  new CustomEvent("quill-ready", {
+    bubbles: false
+  })
+);
+
+
     </script>
 </body>
 

@@ -6,9 +6,9 @@ import { stylesHighlightjs } from "./styles-highlightjs.js";
 import { stylesCommonForEditorAndViewer } from "./styles-common-for-editor-and-viewer.js";
 
 import "./highlight.pack.js";
-import "quill/dist/quill.min.js";
+// import "quill/dist/quill.min.js";
 
-import "@01ht/ht-wysiwyg/ht-quill-components.js";
+import { initHTComponents } from "@01ht/ht-wysiwyg/ht-quill-components.js";
 
 import "@01ht/ht-wysiwyg/ht-wysiwyg-image.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-gif.js";
@@ -21,8 +21,7 @@ hljs.configure({
 
 class HTWysiwygViewer extends LitElement {
   render() {
-    const { data, quillReady } = this;
-    if (quillReady) this.quill.setContents(JSON.parse(data));
+    const { data } = this;
     return html`
     <!-- ${stylesQuillSnow} -->
     ${stylesHighlightjs}
@@ -61,7 +60,8 @@ class HTWysiwygViewer extends LitElement {
     return {
       data: { type: String },
       description: { type: Object },
-      quillReady: { type: Boolean }
+      quillReady: { type: Boolean },
+      htComponentsReady: { type: Boolean }
     };
   }
 
@@ -69,9 +69,65 @@ class HTWysiwygViewer extends LitElement {
     super();
     this.description = {};
     this.quillReady = false;
+    this.htComponentsReady = false;
+  }
+
+  firstUpdated() {
+    this._initQuill();
   }
 
   _initQuill() {
+    if (window.Quill) {
+      this.quillReady = true;
+      this._initHTQuillComponents();
+
+      return;
+    }
+    if (window.quillScriptAdded === undefined) {
+      window.quillScriptAdded = true;
+      let script = document.createElement("script");
+      script.src = "/node_modules/quill/dist/quill.min.js";
+      document.body.appendChild(script);
+    }
+    this._checkQuillInit();
+  }
+
+  _checkQuillInit() {
+    if (window.Quill) {
+      this.quillReady = true;
+      this._initHTQuillComponents();
+    } else {
+      setTimeout(_ => {
+        this._checkQuillInit();
+      }, 100);
+    }
+  }
+
+  _initHTQuillComponents() {
+    if (window.Quill.imports["formats/ht-wysiwyg-youtube"]) {
+      this.htComponentsReady = true;
+      this._initQuillContainer();
+      return;
+    }
+    if (window.HTQuillCompnentsInitializing === undefined) {
+      window.HTQuillCompnentsInitializing = true;
+      initHTComponents();
+    }
+    this._checkHTQuillComponentsInit();
+  }
+
+  _checkHTQuillComponentsInit() {
+    if (window.Quill.imports["formats/ht-wysiwyg-youtube"]) {
+      this.htComponentsReady = true;
+      this._initQuillContainer();
+    } else {
+      setTimeout(_ => {
+        this._checkHTQuillComponentsInit();
+      }, 100);
+    }
+  }
+
+  _initQuillContainer() {
     this.quill = new Quill(this.shadowRoot.querySelector("#quill"), {
       modules: {
         syntax: true,
@@ -80,21 +136,13 @@ class HTWysiwygViewer extends LitElement {
       theme: "snow"
     });
     this.quill.enable(false);
-    this.quillReady = true;
     this.quill.setContents(this.description);
   }
 
-  firstUpdated() {
-    if (!window.Quill) {
-      let script = document.createElement("script");
-      script.src = "/node_modules/quill/dist/quill.min.js";
-      script.onload = _ => {
-        this._initQuill();
-      };
-      this.shadowRoot.appendChild(script);
-    } else {
-      this._initQuill();
-    }
+  updated() {
+    if (JSON.stringify(this.data) !== JSON.stringify())
+      if (this.quillReady && this.htComponentsReady && this.quill)
+        this.quill.setContents(JSON.parse(this.data));
   }
 }
 
