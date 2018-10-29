@@ -86,7 +86,10 @@ class HTWysiwyg extends LitElement {
   firstUpdated() {
     let iframe = this.shadowRoot.getElementById("iframe");
     let iframeWindow = iframe.contentWindow;
-    iframe.contentDocument.write(iframeContent);
+    let doc = iframeWindow.document;
+    doc.open();
+    doc.write(iframeContent);
+    doc.close();
     iframeWindow.cloudinaryURL = window.cloudinaryURL;
     iframeWindow.addEventListener("quill-ready", e => {
       e.stopPropagation();
