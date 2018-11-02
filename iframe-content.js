@@ -1594,7 +1594,8 @@ window.quill = new Quill(document.querySelector("#quill"), {
 
 window.dispatchEvent(
   new CustomEvent("quill-ready", {
-    bubbles: false
+    bubbles: true,
+    composed: true
   })
 );
 

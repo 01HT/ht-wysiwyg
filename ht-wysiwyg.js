@@ -23,6 +23,11 @@ class HTWysiwyg extends LitElement {
         iframe {
           width:100%;
           height: 500px;
+          display:none;
+        }
+
+        iframe[ready] {
+          display:block;
         }
 
         paper-button {
@@ -40,8 +45,14 @@ class HTWysiwyg extends LitElement {
         #test {
           height:300px;
         }
+
+        #iframe-container {
+          width: 100%;
+          height: 500px;
+          box-sizing: border-box;
+        }
       </style>
-      <iframe id="iframe" frameborder="0"></iframe>
+      <div id="iframe-container"></div>
       <paper-dialog id="youtube-dialog">
         <paper-dialog-scrollable>
           <h2>Введите ID видео</h2>
@@ -77,42 +88,17 @@ class HTWysiwyg extends LitElement {
 
   constructor() {
     super();
-    this.quillReady = false;
+    this.quillUpdating = false;
     this.quill = {};
     this.currentInsertMode;
+    this.templateReady = false;
     this.description = `{"ops":[{"insert":"\\n"}]}`;
+    this.defaultDescription = `{"ops":[{"insert":"\\n"}]}`;
   }
 
   firstUpdated() {
-    let iframe = this.shadowRoot.getElementById("iframe");
-    let iframeWindow = iframe.contentWindow;
-    let doc = iframeWindow.document;
-    doc.open();
-    doc.write(iframeContent);
-    doc.close();
-    iframeWindow.cloudinaryURL = window.cloudinaryURL;
-    iframeWindow.addEventListener("quill-ready", e => {
-      e.stopPropagation();
-      this.quill = iframeWindow.quill;
-      this.quillReady = true;
-      this.setData(this.description);
-      this.dispatchEvent(
-        new CustomEvent("ht-wysiwyg-ready", {
-          bubbles: false
-        })
-      );
-    });
-    iframeWindow.addEventListener("show-modal", e => {
-      e.stopPropagation();
-      this.currentInsertMode = e.detail.mode;
-      if (this.currentInsertMode === "youtube") {
-        this.shadowRoot.querySelector("#youtube").value = "";
-        this.shadowRoot.querySelector("#youtube-dialog").open();
-      } else {
-        this.shadowRoot.querySelector("#ht-storage-dialog").open();
-        this.storage.updateList();
-      }
-    });
+    this.templateReady = true;
+    this.setData(this.description);
   }
 
   get storage() {
@@ -126,15 +112,43 @@ class HTWysiwyg extends LitElement {
 
   setData(description) {
     this.description = description;
-    if (this.quillReady) {
-      if (this.getData() !== this.description) {
-        this.quill.setContents(JSON.parse(this.description));
+    if (!this.templateReady) return;
+    if (this.quillUpdating) return;
+    this.quillUpdating = true;
+    let iframe = this.shadowRoot.querySelector("iframe");
+    if (iframe !== null)
+      this.shadowRoot.querySelector("#iframe-container").removeChild(iframe);
+    iframe = document.createElement("iframe");
+    iframe.setAttribute("frameborder", 0);
+    this.shadowRoot.querySelector("#iframe-container").appendChild(iframe);
+    let iframeWindow = iframe.contentWindow;
+    let doc = iframeWindow.document;
+    doc.open();
+    iframeWindow.cloudinaryURL = window.cloudinaryURL;
+    iframeWindow.addEventListener("quill-ready", e => {
+      e.stopPropagation();
+      this.quill = iframeWindow.quill;
+      this.quill.setContents(JSON.parse(this.description));
+      this.shadowRoot.querySelector("iframe").setAttribute("ready", "");
+      this.quillUpdating = false;
+    });
+    iframeWindow.addEventListener("show-modal", e => {
+      e.stopPropagation();
+      this.currentInsertMode = e.detail.mode;
+      if (this.currentInsertMode === "youtube") {
+        this.shadowRoot.querySelector("#youtube").value = "";
+        this.shadowRoot.querySelector("#youtube-dialog").open();
+      } else {
+        this.shadowRoot.querySelector("#ht-storage-dialog").open();
+        this.storage.updateList();
       }
-    }
+    });
+    doc.write(iframeContent);
+    doc.close();
   }
 
   setDefaultData() {
-    this.setData(`{"ops":[{"insert":"\\n"}]}`);
+    this.setData(this.defaultDescription);
   }
 
   insertToEditor(item) {
