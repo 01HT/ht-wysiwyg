@@ -152,7 +152,7 @@ class HTWysiwyg extends LitElement {
   }
 
   insertToEditor(item) {
-    let Quill = this.shadowRoot.getElementById("iframe").contentWindow.Quill;
+    let Quill = this.shadowRoot.querySelector("iframe").contentWindow.Quill;
     let resourceType = item.resource_type;
     let format = item.format;
     let currentInsertMode = this.currentInsertMode;
