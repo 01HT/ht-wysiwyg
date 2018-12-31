@@ -22,8 +22,8 @@ hljs.configure({
 class HTWysiwygViewer extends LitElement {
   render() {
     const { data } = this;
+    // ${stylesQuillSnow}
     return html`
-    <!-- ${stylesQuillSnow} -->
     ${stylesHighlightjs}
     ${stylesCommonForEditorAndViewer}
     ${SharedStyles}
