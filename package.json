@@ -9,7 +9,7 @@
     "build": "./node_modules/.bin/webpack iframe-imports-es6.js && babel ./dist/main.js -o ./iframe-imports-amd.js"
   },
   "dependencies": {
-    "@polymer/lit-element": "^0.6.1",
+    "lit-element": "^2.0.1",
     "@polymer/paper-button": "^3.0.1",
     "@polymer/paper-input": "^3.0.1",
     "@polymer/paper-styles": "^3.0.1",

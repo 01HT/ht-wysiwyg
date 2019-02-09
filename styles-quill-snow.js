@@ -1,8 +1,8 @@
 // This is default quill snow theme styles
 // Fix need replace '\' => '\\' in content: for correct export
-import { html } from "@polymer/lit-element";
+import { css } from "lit-element";
 
-export const stylesQuillSnow = html`
+export const stylesQuillSnow = css`
 <style>
 .ql-container {
   box-sizing: border-box;

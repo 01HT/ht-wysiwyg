@@ -1,6 +1,6 @@
-import { html } from "@polymer/lit-element";
+import { css } from "lit-element";
 
-export const stylesCommonForEditorAndViewer = html`
+export const stylesCommonForEditorAndViewer = css`
 
 <style>
 .ql-editor {

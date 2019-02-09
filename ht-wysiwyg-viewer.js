@@ -1,5 +1,5 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 
 import { stylesQuillSnow } from "./styles-quill-snow.js";
 import { stylesHighlightjs } from "./styles-highlightjs.js";
@@ -20,14 +20,12 @@ hljs.configure({
 });
 
 class HTWysiwygViewer extends LitElement {
-  render() {
-    const { data } = this;
-    // ${stylesQuillSnow}
-    return html`
-    ${stylesHighlightjs}
-    ${stylesCommonForEditorAndViewer}
-    ${SharedStyles}
-    <style>
+  // ${stylesQuillSnow}
+  static styles = [
+    stylesHighlightjs,
+    stylesCommonForEditorAndViewer,
+    SharedStyles,
+    css`<style>
       :host {
         display: block;
         position: relative;
@@ -45,15 +43,16 @@ class HTWysiwygViewer extends LitElement {
       .ql-clipboard {
         display:none;
       }
-    </style>
+    </style>`
+  ];
+
+  render() {
+    const { data } = this;
+    return html` 
     <div id="container">
         <div id="quill"></div>
     </div>
 `;
-  }
-
-  static get is() {
-    return "ht-wysiwyg-viewer";
   }
 
   static get properties() {
@@ -146,4 +145,4 @@ class HTWysiwygViewer extends LitElement {
   }
 }
 
-customElements.define(HTWysiwygViewer.is, HTWysiwygViewer);
+customElements.define("ht-wysiwyg-viewer", HTWysiwygViewer);

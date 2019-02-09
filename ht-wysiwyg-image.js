@@ -1,7 +1,47 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 
 class HTWysiwygImage extends LitElement {
+  static styles = css`<style>
+    :host {
+      display: block;
+      position:relative;
+      box-sizing:border-box;
+    }
+
+    img {
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100%;
+      display:block;
+    }
+
+    picture {
+      display: flex;
+      position:relative;
+      width:100%;
+      overflow:hidden;
+    }
+
+    picture[loading] {
+      background:#e2e2e2;
+    }
+
+    #placeholder {
+      filter:blur(5px);
+      transition: opacity 0.5s;
+    }
+
+    #image {
+      transition: opacity 0.7s;
+    }
+
+    [loading] {
+      opacity:0;
+    }
+  </style>`;
+
   render() {
     const { data } = this;
     let placeholder = `${
@@ -24,54 +64,11 @@ class HTWysiwygImage extends LitElement {
       padding = "" + data.height / data.width * 100;
     }
     return html`
-      <style>
-        :host {
-          display: block;
-          position:relative;
-          box-sizing:border-box;
-        }
-
-        img {
-          position: absolute;
-          top:0;
-          left:0;
-          width: 100%;
-          display:block;
-        }
-
-        picture {
-          display: flex;
-          position:relative;
-          width:100%;
-          overflow:hidden;
-        }
-
-        picture[loading] {
-          background:#e2e2e2;
-        }
-
-        #placeholder {
-          filter:blur(5px);
-          transition: opacity 0.5s;
-        }
-
-        #image {
-          transition: opacity 0.7s;
-        }
-
-        [loading] {
-          opacity:0;
-        }
-      </style>
       <picture loading style="padding-bottom: ${padding}%">
-        <img id="placeholder" loading src=${placeholder}>
-        <img id="image" loading src=${src}>
+        <img id="placeholder" loading src="${placeholder}">
+        <img id="image" loading src="${src}">
       </picture>
 `;
-  }
-
-  static get is() {
-    return "ht-wysiwyg-image";
   }
 
   static get properties() {
@@ -90,4 +87,4 @@ class HTWysiwygImage extends LitElement {
   }
 }
 
-customElements.define(HTWysiwygImage.is, HTWysiwygImage);
+customElements.define("ht-wysiwyg-image", HTWysiwygImage);

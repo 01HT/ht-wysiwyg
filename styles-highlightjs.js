@@ -1,6 +1,6 @@
-import { html } from "@polymer/lit-element";
+import { css } from "lit-element";
 
-export const stylesHighlightjs = html`
+export const stylesHighlightjs = css`
 <style>
 .hljs {
     display: block;

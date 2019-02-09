@@ -1,7 +1,15 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 
 class HTWysiwygGif extends LitElement {
+  static styles = css`<style>
+    :host {
+      display: block;
+      position:relative;
+      box-sizing:border-box;
+    }
+  </style>`;
+
   render() {
     const { data } = this;
     let poster = `${window.cloudinaryURL}/image/upload/v${data.version}/${
@@ -14,24 +22,13 @@ class HTWysiwygGif extends LitElement {
       data.public_id
     }.webm`;
     return html`
-      <style>
-        :host {
-          display: block;
-          position:relative;
-          box-sizing:border-box;
-        }
-      </style>
       <div id="container">
-        <video width="100%" height="auto" autoplay loop muted="muted" poster=${poster}>
-            <source type="video/mp4" src=${mp4}>
-            <source type="video/webm" src=${webm}>
+        <video width="100%" height="auto" autoplay loop muted="muted" poster="${poster}">
+            <source type="video/mp4" src="${mp4}">
+            <source type="video/webm" src="${webm}">
         </video>
       </div>
 `;
-  }
-
-  static get is() {
-    return "ht-wysiwyg-gif";
   }
 
   static get properties() {
@@ -41,4 +38,4 @@ class HTWysiwygGif extends LitElement {
   }
 }
 
-customElements.define(HTWysiwygGif.is, HTWysiwygGif);
+customElements.define("ht-wysiwyg-gif", HTWysiwygGif);

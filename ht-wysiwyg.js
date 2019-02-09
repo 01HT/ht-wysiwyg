@@ -1,5 +1,5 @@
 "use strict";
-import { LitElement, html } from "@polymer/lit-element";
+import { LitElement, html, css } from "lit-element";
 import "@polymer/paper-button";
 import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-styles/default-theme.js";
@@ -11,47 +11,48 @@ import "@01ht/ht-storage";
 import { iframeContent } from "./iframe-content.js";
 
 class HTWysiwyg extends LitElement {
+  static styles = css`<style>
+    :host {
+      display: block;
+      position:relative;
+      box-sizing:border-box;
+    }
+
+    iframe {
+      width:100%;
+      height: 500px;
+      display:none;
+    }
+
+    iframe[ready] {
+      display:block;
+    }
+
+    paper-button {
+      font-weight: 500;
+      color: var(--accent-color);
+    }
+
+    paper-dialog {
+      width: 95%;
+      max-width: 800px;
+      margin-left: 0;
+      margin-right: 0;
+    }
+
+    #test {
+      height:300px;
+    }
+
+    #iframe-container {
+      width: 100%;
+      height: 500px;
+      box-sizing: border-box;
+    }
+  </style>`;
+
   render() {
     return html`
-      <style>
-        :host {
-          display: block;
-          position:relative;
-          box-sizing:border-box;
-        }
-
-        iframe {
-          width:100%;
-          height: 500px;
-          display:none;
-        }
-
-        iframe[ready] {
-          display:block;
-        }
-
-        paper-button {
-          font-weight: 500;
-          color: var(--accent-color);
-        }
-
-        paper-dialog {
-          width: 95%;
-          max-width: 800px;
-          margin-left: 0;
-          margin-right: 0;
-        }
-
-        #test {
-          height:300px;
-        }
-
-        #iframe-container {
-          width: 100%;
-          height: 500px;
-          box-sizing: border-box;
-        }
-      </style>
       <div id="iframe-container"></div>
       <paper-dialog id="youtube-dialog">
         <paper-dialog-scrollable>
@@ -62,9 +63,9 @@ class HTWysiwyg extends LitElement {
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="close" dialog-dismiss>Закрыть</paper-button>
-          <paper-button id="select" dialog-confirm autofocus @click=${e => {
-            this._insertYouTubeVideo();
-          }}>Выбрать</paper-button>
+          <paper-button id="select" dialog-confirm autofocus @click="${
+            this._insertYouTubeVideo
+          }">Выбрать</paper-button>
         </div>
       </paper-dialog>
       <paper-dialog id="ht-storage-dialog">
@@ -74,16 +75,12 @@ class HTWysiwyg extends LitElement {
         </paper-dialog-scrollable>
         <div class="buttons">
           <paper-button id="close" dialog-dismiss>Закрыть</paper-button>
-          <paper-button id="select" dialog-confirm autofocus @click=${e => {
-            this._insertImages();
-          }}">Выбрать</paper-button>
+          <paper-button id="select" dialog-confirm autofocus @click="${
+            this._insertImages
+          }">Выбрать</paper-button>
         </div>
       </paper-dialog>
 `;
-  }
-
-  static get is() {
-    return "ht-wysiwyg";
   }
 
   constructor() {
@@ -190,4 +187,4 @@ class HTWysiwyg extends LitElement {
   }
 }
 
-customElements.define(HTWysiwyg.is, HTWysiwyg);
+customElements.define("ht-wysiwyg", HTWysiwyg);
