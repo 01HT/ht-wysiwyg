@@ -1,46 +1,47 @@
 "use strict";
 import { LitElement, html, css } from "lit-element";
 
+import { stylesBasicWebcomponents } from "@01ht/ht-theme/styles";
+
 class HTWysiwygImage extends LitElement {
-  static styles = css`<style>
-    :host {
-      display: block;
-      position:relative;
-      box-sizing:border-box;
-    }
+  static get styles() {
+    return [
+      stylesBasicWebcomponents,
+      css`
+        img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          display: block;
+        }
 
-    img {
-      position: absolute;
-      top:0;
-      left:0;
-      width: 100%;
-      display:block;
-    }
+        picture {
+          display: flex;
+          position: relative;
+          width: 100%;
+          overflow: hidden;
+        }
 
-    picture {
-      display: flex;
-      position:relative;
-      width:100%;
-      overflow:hidden;
-    }
+        picture[loading] {
+          background: #e2e2e2;
+        }
 
-    picture[loading] {
-      background:#e2e2e2;
-    }
+        #placeholder {
+          filter: blur(5px);
+          transition: opacity 0.5s;
+        }
 
-    #placeholder {
-      filter:blur(5px);
-      transition: opacity 0.5s;
-    }
+        #image {
+          transition: opacity 0.7s;
+        }
 
-    #image {
-      transition: opacity 0.7s;
-    }
-
-    [loading] {
-      opacity:0;
-    }
-  </style>`;
+        [loading] {
+          opacity: 0;
+        }
+      `
+    ];
+  }
 
   render() {
     const { data } = this;

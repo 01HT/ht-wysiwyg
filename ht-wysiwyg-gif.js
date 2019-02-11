@@ -1,14 +1,12 @@
 "use strict";
 import { LitElement, html, css } from "lit-element";
 
+import { stylesBasicWebcomponents } from "@01ht/ht-theme/styles";
+
 class HTWysiwygGif extends LitElement {
-  static styles = css`<style>
-    :host {
-      display: block;
-      position:relative;
-      box-sizing:border-box;
-    }
-  </style>`;
+  static get styles() {
+    return stylesBasicWebcomponents;
+  }
 
   render() {
     const { data } = this;

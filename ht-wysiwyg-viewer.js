@@ -10,6 +10,8 @@ import "./highlight.pack.js";
 
 import { initHTComponents } from "@01ht/ht-wysiwyg/ht-quill-components.js";
 
+import { styles } from "@01ht/ht-theme/styles";
+
 import "@01ht/ht-wysiwyg/ht-wysiwyg-image.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-gif.js";
 import "@01ht/ht-wysiwyg/ht-wysiwyg-video.js";
@@ -21,30 +23,26 @@ hljs.configure({
 
 class HTWysiwygViewer extends LitElement {
   // ${stylesQuillSnow}
-  static styles = [
-    stylesHighlightjs,
-    stylesCommonForEditorAndViewer,
-    SharedStyles,
-    css`<style>
-      :host {
-        display: block;
-        position: relative;
-        box-sizing: border-box;
-      }
-      
-      .ql-editor {
-        padding:0;
-      }
+  static get styles() {
+    return [
+      styles,
+      stylesHighlightjs,
+      stylesCommonForEditorAndViewer,
+      css`
+        .ql-editor {
+          padding: 0;
+        }
 
-      .ql-container.ql-snow {
+        .ql-container.ql-snow {
           border: none;
-      }
+        }
 
-      .ql-clipboard {
-        display:none;
-      }
-    </style>`
-  ];
+        .ql-clipboard {
+          display: none;
+        }
+      `
+    ];
+  }
 
   render() {
     const { data } = this;

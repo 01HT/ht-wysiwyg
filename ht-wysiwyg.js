@@ -10,46 +10,47 @@ import "@01ht/ht-storage";
 // Fix for adding this file when build
 import { iframeContent } from "./iframe-content.js";
 
+import { stylesBasicWebcomponents } from "@01ht/ht-theme/styles";
+
 class HTWysiwyg extends LitElement {
-  static styles = css`<style>
-    :host {
-      display: block;
-      position:relative;
-      box-sizing:border-box;
-    }
+  static get styles() {
+    return [
+      stylesBasicWebcomponents,
+      css`
+        iframe {
+          width: 100%;
+          height: 500px;
+          display: none;
+        }
 
-    iframe {
-      width:100%;
-      height: 500px;
-      display:none;
-    }
+        iframe[ready] {
+          display: block;
+        }
 
-    iframe[ready] {
-      display:block;
-    }
+        paper-button {
+          font-weight: 500;
+          color: var(--accent-color);
+        }
 
-    paper-button {
-      font-weight: 500;
-      color: var(--accent-color);
-    }
+        paper-dialog {
+          width: 95%;
+          max-width: 800px;
+          margin-left: 0;
+          margin-right: 0;
+        }
 
-    paper-dialog {
-      width: 95%;
-      max-width: 800px;
-      margin-left: 0;
-      margin-right: 0;
-    }
+        #test {
+          height: 300px;
+        }
 
-    #test {
-      height:300px;
-    }
-
-    #iframe-container {
-      width: 100%;
-      height: 500px;
-      box-sizing: border-box;
-    }
-  </style>`;
+        #iframe-container {
+          width: 100%;
+          height: 500px;
+          box-sizing: border-box;
+        }
+      `
+    ];
+  }
 
   render() {
     return html`

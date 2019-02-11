@@ -2,34 +2,36 @@
 import { LitElement, html, css } from "lit-element";
 
 class HTWysiwygYoutube extends LitElement {
-  static styles = css`<style>
-    :host {
-      display: block;
-      position:relative;
-      box-sizing:border-box;
-      overflow:hidden;
-    }
+  static get styles() {
+    return css`
+      :host {
+        display: block;
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
 
-    iframe {
-      display:block;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      position: absolute;
-    }
+      iframe {
+        display: block;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+      }
 
-    #container {
-      display: block;
-      padding-bottom: 56.25%;
-      max-height: 56.25%;
-      height: 100%;
-      width: 100%;
-      background:black;
-    }
-  </style>`;
+      #container {
+        display: block;
+        padding-bottom: 56.25%;
+        max-height: 56.25%;
+        height: 100%;
+        width: 100%;
+        background: black;
+      }
+    `;
+  }
 
   render() {
     const { data } = this;
