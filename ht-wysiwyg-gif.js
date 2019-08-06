@@ -10,15 +10,15 @@ class HTWysiwygGif extends LitElement {
 
   render() {
     const { data } = this;
-    let poster = `${window.cloudinaryURL}/image/upload/v${data.version}/${
-      data.public_id
-    }.jpg`;
-    let mp4 = `${window.cloudinaryURL}/image/upload/v${data.version}/${
-      data.public_id
-    }.mp4`;
-    let webm = `${window.cloudinaryURL}/image/upload/v${data.version}/${
-      data.public_id
-    }.webm`;
+    let poster = `${window.appConfig.cloudinary.url}/image/upload/v${
+      data.version
+    }/${data.public_id}.jpg`;
+    let mp4 = `${window.appConfig.cloudinary.url}/image/upload/v${
+      data.version
+    }/${data.public_id}.mp4`;
+    let webm = `${window.appConfig.cloudinary.url}/image/upload/v${
+      data.version
+    }/${data.public_id}.webm`;
     return html`
       <div id="container">
         <video width="100%" height="auto" autoplay loop muted="muted" poster="${poster}">

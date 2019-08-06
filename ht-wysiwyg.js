@@ -122,7 +122,7 @@ class HTWysiwyg extends LitElement {
     let iframeWindow = iframe.contentWindow;
     let doc = iframeWindow.document;
     doc.open();
-    iframeWindow.cloudinaryURL = window.cloudinaryURL;
+    iframeWindow.cloudinaryURL = window.appConfig.cloudinary.url;
     iframeWindow.addEventListener("quill-ready", e => {
       e.stopPropagation();
       this.quill = iframeWindow.quill;

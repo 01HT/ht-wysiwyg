@@ -46,15 +46,15 @@ class HTWysiwygImage extends LitElement {
   render() {
     const { data } = this;
     let placeholder = `${
-      window.cloudinaryURL
+      window.appConfig.cloudinary.url
     }/image/upload/c_scale,f_auto,w_64/v${data.version}/${data.public_id}.${
       data.format
     }`;
-    let src = `${window.cloudinaryURL}/image/upload/f_auto/v${data.version}/${
-      data.public_id
-    }.${data.format}`;
+    let src = `${window.appConfig.cloudinary.url}/image/upload/f_auto/v${
+      data.version
+    }/${data.public_id}.${data.format}`;
     if (data.format === "svg") {
-      src = `${window.cloudinaryURL}/image/upload/v${data.version}/${
+      src = `${window.appConfig.cloudinary.url}/image/upload/v${data.version}/${
         data.public_id
       }.${data.format}`;
     }
